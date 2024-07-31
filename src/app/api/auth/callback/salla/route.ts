@@ -1,10 +1,12 @@
+"use server";
 import { NextApiRequest, NextApiResponse } from "next";
 import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
-
+import { createUser, db, insertAccount } from "@/db/drizzle";
+import { accounts, users } from "@/db/schema";
+import { ACCOUNTS } from "@/constants/types";
 export async function GET(req: NextApiRequest, res: NextApiResponse) {
-    console.log("in auth callback route GET");
-    //console.log(req);
+
     try {
         let code = "";
         let state = '';
@@ -17,22 +19,18 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
             const stateMatched = stateMatch[1];
             code = extractedCode;
             state = stateMatched;
-            console.log(`Extracted code: ${extractedCode}`);
-            console.log(`Extracted state: ${stateMatched}`);
+            // console.log(`Extracted code: ${extractedCode}`);
+            // console.log(`Extracted state: ${stateMatched}`);
         } else {
             console.log("Code not found in the string.");
         }
 
-        // const { code } = req.query;
-        console.log("code in callback", code);
-        // `grant_type=authorization_code&redirect_uri=http://localhost:3000/api/auth/callback/salla&code=${code}&
-        //   client_id=${process.env.AUTH_CLIENT_ID}&client_secret=${process.env.AUTH_CLIENT_SECRET}`
         const postData = {
             grant_type: 'authorization_code',
             redirect_uri: "http://localhost:3000/api/auth/callback/salla",
             code: code,
-            client_id: "24d97f44-d31b-4469-88ee-3658b86965a9",// process.env.AUTH_CLIENT_ID??'',
-            client_secret: "6d6454621d3a27ec02b6828faf062a51",// process.env.AUTH_CLIENT_SECRET??'',
+            client_id: process.env.AUTH_CLIENT_ID ?? '',
+            client_secret: process.env.AUTH_CLIENT_SECRET ?? '',
             state: state,
         }
 
@@ -46,8 +44,10 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
                 },
             });
         const response = await tokenResponse.json();
-        console.log("res", response);
+
         const { access_token, expires_in, refresh_token } = response;
+        const expireDate = new Date(expires_in * 1000)
+
         const authcookie = cookies();
         authcookie.set('salla_token', access_token, { path: '/' });
         const userProfileResponse = await fetch(
@@ -61,12 +61,34 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
         );
         const userProfile = await userProfileResponse.json();
         console.log(userProfile);
+        if (userProfile.data) {
+            try {
+                // const { id, name, email, mobile, role, created_at, context, merchant }
+                //   : { id: number, name: string, email: string, mobile: string, role: string, created_at: string, context: any, merchant: any } = userProfile.data;
+                // console.log(id, name, email, context.exp);
+                await createUser(userProfile.data).then(async () => {
+                    await insertAccount({
+                        access_token: access_token,
+                        expiredIn: userProfile.data.context.exp,
+                        refresh_token: refresh_token,
+                        user_id: userProfile.data.id
+                    });
 
-        return Response.redirect('http://localhost:3000');
-        //return Response.json({ data: { access_token, expires_in, refresh_token } });
+                });
+
+                // console.log('in route ', returning);
+            } catch (error: any) {
+                console.log('error in insert route', error);
+                //throw error;
+            }
+
+        }
+
+        return Response.json({ data: "success" });
+
 
     } catch (error) {
-        console.error("error", error);
-        return Response.error();
+        console.error("error in callback route", error);
+        throw Response.error();
     }
 }
