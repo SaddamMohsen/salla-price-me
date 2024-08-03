@@ -2,31 +2,36 @@
 import { drizzle } from 'drizzle-orm/neon-http';
 import { neon } from '@neondatabase/serverless';
 import * as z from "zod";
-import { config } from 'dotenv';
-import { Account } from 'next-auth';
-import { ACCOUNTS, Merchant } from "@/constants/types";
-import { accounts, merchants, users } from './schema';
+import { Merchant } from "@/constants/types";
+import { accounts, merchants, products, users } from './schema';
 import { eq } from 'drizzle-orm';
-import { error } from 'console';
-config({ path: '.env.local' });
+import { createInsertSchema, createSelectSchema } from 'drizzle-typebox';
+import { Type } from '@sinclair/typebox';
+import { Value } from '@sinclair/typebox/value';
+
 
 const sql = neon(process.env.DATABASE_URL!);
+
 export const db = drizzle(sql);
 
 export const insertAccount = async (data: any) => {
     try {
         const { user_id, access_token, expiredIn, refresh_token } = data;
-        const result = await db.select({ userId: user_id, exp: expiredIn }).from(accounts).where(eq(accounts.user_id, user_id))
+        const result = await db.select({ userId: user_id, exp: expiredIn })
+            .from(accounts).where(eq(accounts.user_id, user_id))
 
 
         if (result.length > 0) {
             console.log(result[0]);
             const { userId, exp } = result[0];
-            if (exp > Date.now())
-                return { status: 200, message: "Account already exists and valid" }
+            if (exp > Date.now()) {
+                ///TODO : add a way to refresh token
+            }
+            return;
+            // return { status: 200, message: "Account already exists and valid" }
 
         }
-        console.log('data to insert into db', data);
+
         const res = await db.insert(accounts).values({
             access_token: access_token, expiredIn: expiredIn, refresh_token: refresh_token, user_id: user_id
         }).returning();
@@ -108,3 +113,7 @@ export const createMerchant = async (data: z.infer<typeof Merchant>, owner: numb
     console.log('return from insert merchant db', resMer);
     //return { status: 200, success: "success insert into merchant" }
 }
+
+
+export const insertProductSchema = createInsertSchema(products);
+export const selectProductSchema = createSelectSchema(products);

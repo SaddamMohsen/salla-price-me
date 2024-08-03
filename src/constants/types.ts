@@ -34,3 +34,51 @@ export const Merchant = z.object({
     commercial_number: z.optional(z.number()),
     created_at: z.optional(z.string()),
 })
+
+export interface ApiProductResponse {
+    id: number;
+    promotion: object;
+    sku: string;
+    thumbnail: string;
+    mpn: string | null;
+    gtin: string | null;
+    type: string;
+    name: string;
+    short_link_code: string;
+    urls: object;
+    price: number;
+    //  {
+    //   amount: number;
+    //   currency: string;
+    // };
+    taxed_price: number;
+    //  {
+    //   amount: number;
+    //   currency: string;
+    // };
+    pre_tax_price: number;
+    //  {
+    //   amount: number;
+    //   currency: string;
+    // };
+    tax: number;
+    //  {
+    //   amount: number;
+    //   currency: string;
+    // };
+    description: string;
+    quantity: number | null;
+    status: string;
+    is_available: boolean;
+    views: number;
+    cost_price: string;
+    weight: number;
+    weight_type: string;
+    with_tax: boolean;
+    sale_price: number;
+    // {
+    //   amount: number;
+    //   currency: string;
+    // };
+}
+
