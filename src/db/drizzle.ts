@@ -11,7 +11,7 @@ import { Value } from '@sinclair/typebox/value';
 
 
 const sql = neon(process.env.DATABASE_URL!);
-
+console.log(process.env.DATABASE_URL)
 export const db = drizzle(sql);
 
 export const insertAccount = async (data: any) => {

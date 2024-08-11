@@ -1,5 +1,5 @@
 {
-  "id": "01ad6ccc-e880-4f45-9dfd-c654c18247d4",
+  "id": "b057b206-8167-4f1b-bbb3-08e46488b0ef",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -124,7 +124,7 @@
         },
         "created_at": {
           "name": "created_at",
-          "type": "timestamp",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -151,6 +151,131 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.products": {
+      "name": "products",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sku": {
+          "name": "sku",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mpn": {
+          "name": "mpn",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gtin": {
+          "name": "gtin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_available": {
+          "name": "is_available",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cost_price": {
+          "name": "cost_price",
+          "type": "numeric(2, 10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric(2, 10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "regular_price": {
+          "name": "regular_price",
+          "type": "numeric(2, 10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "taxed_price": {
+          "name": "taxed_price",
+          "type": "numeric(2, 10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pre_tax_price": {
+          "name": "pre_tax_price",
+          "type": "numeric(2, 10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tax": {
+          "name": "tax",
+          "type": "numeric(2, 10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weight": {
+          "name": "weight",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weight_type": {
+          "name": "weight_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'g'"
+        },
+        " with_tax": {
+          "name": " with_tax",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

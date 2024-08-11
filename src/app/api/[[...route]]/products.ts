@@ -8,7 +8,7 @@ import { Env } from "./route";
 const app = new Hono<Env>()
     .get("/", async (c) => {
         const res = await fetch(
-            "https://api.salla.dev/admin/v2/products", //'https://api.salla.dev/admin/v2/products/1051932301/variants',
+            'https://api.salla.dev/admin/v2/products', //'https://api.salla.dev/admin/v2/products/1051932301/variants',
             {
                 method: "GET",
                 headers: {
@@ -19,7 +19,7 @@ const app = new Hono<Env>()
         );
         const data: ApiProductResponse = await res.json();
         //const data = await res.json();
-        console.log(data);
+        // console.log(data);
         console.log("in hono");
         return c.json({ products: data });
     })
@@ -28,7 +28,7 @@ const app = new Hono<Env>()
         zValidator(
             "param",
             z.object({
-                id: z.number(),
+                id: z.string(),
             })
         ),
         async (c) => {
@@ -45,13 +45,12 @@ const app = new Hono<Env>()
                 }
             );
             const data: ApiProductResponse = await res.json();
-            //const data = await res.json();
-            console.log(data);
-            console.log("in hono");
+            
+
             return c.json({ products: data });
         }
     )
-    .post(
+    /*.post(
         "/",
         // zValidator(
         //     "param",
@@ -117,6 +116,44 @@ const app = new Hono<Env>()
             const nData = await resp.json();
             console.log("response from put product", nData);
             return c.json({ data: nData });
+        }
+    )*/
+    .post(
+        "/",
+        zValidator("json", z.object({
+            price: z.number(),
+        })),
+        async (c) => {
+            console.log('in update sku')
+            // const { sku } = c.req.valid("param");
+            // const { price } = c.req.valid('json');
+            const payload = [
+                {
+                    "id": 1825970060,
+                    "price": 500,
+                    "cost_price": 550,
+                    "sale_price": 600,
+                    "sale_end": "2022-07-30"
+                }
+            ]
+            const res = await fetch(
+                `https://api.salla.dev/admin/v2/products/prices/bulkPrice`, //'https://api.salla.dev/admin/v2/products/1051932301/variants',
+                {
+                    method: "POST",
+                    body: JSON.stringify({
+                        "products": payload
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${c.var.access_token}`,
+                    },
+                }
+            );
+            const data: ApiProductResponse = await res.json();
+            //const data = await res.json();
+            console.log(data);
+
+            return c.json({ data });
         }
     );
 

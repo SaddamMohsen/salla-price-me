@@ -17,8 +17,30 @@ CREATE TABLE IF NOT EXISTS "merchants" (
 	"domain" text,
 	"tax_number" integer,
 	"commercial_number" integer,
-	"created_at" timestamp,
+	"created_at" text,
 	"owner" integer
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "products" (
+	"id" integer,
+	"sku" text,
+	"mpn" text,
+	"gtin" text,
+	"type" text,
+	"name" text,
+	"description" text,
+	"quantity" integer,
+	"status" text,
+	"is_available" boolean,
+	"cost_price" numeric(2, 10),
+	"price" numeric(2, 10),
+	"regular_price" numeric(2, 10),
+	"taxed_price" numeric(2, 10),
+	"pre_tax_price" numeric(2, 10),
+	"tax" numeric(2, 10),
+	"weight" numeric,
+	"weight_type" text DEFAULT 'g',
+	" with_tax" boolean
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (

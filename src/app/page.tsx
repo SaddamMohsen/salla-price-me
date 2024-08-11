@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { auth, signIn, signOut } from "auth";
+import { auth, signIn, signOut } from "@/auth";
 import { SignIn } from "@/components/auth-component";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

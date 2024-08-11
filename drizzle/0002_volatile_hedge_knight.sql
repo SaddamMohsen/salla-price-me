@@ -1,1 +1,0 @@
-ALTER TABLE "merchants" ALTER COLUMN "created_at" SET DATA TYPE text;

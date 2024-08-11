@@ -9,17 +9,19 @@ const config = {
       id: "salla",
       name: "Salla",
       type: "oauth",
+      //type: "oidc",
       checks: ["state"],
+
       authorization:
       {
         url: "https://accounts.salla.sa/oauth2/auth",
         params: {
-          //grant_type: "authorization_code",
-          response_type: "code",
+          grant_type: "authorization_code",
+          response_type: "token",
           scope: "offline_access",
           client_id: process.env.AUTH_CLIENT_ID,
           client_secret: process.env.AUTH_CLIENT_SECRET,
-          code: "",
+          //code: "",
           redirect_uri: "http://localhost:3000/api/auth/callback/salla",
         },
       },
@@ -29,14 +31,27 @@ const config = {
 
       //   }
       // },
-      token: "https://accounts.salla.sa/oauth2/token",
+      token: {
+        url: "https://accounts.salla.sa/oauth2/token",
+        method: "POST",
+        params: {
+          grant_type: "authorization_code",
+          //response_type: "token",
+          scope: "offline_access",
+          //state: '',
+          client_id: process.env.AUTH_CLIENT_ID,
+          client_secret: process.env.AUTH_CLIENT_SECRET,
+          code: "",
+          redirect_uri: "http://localhost:3000/api/auth/callback/salla",
+        },
+      },
       userinfo: "https://accounts.salla.sa/oauth2/user/info",
-      async profile(profile: any) {
+      async profile(profile) {
         console.log("profile", profile);
         return {
-          id: profile.user.id.toString(),
-          name: profile.user.name,
-          email: profile.user.email,
+          id: profile.sub
+          // name: profile.user.name,
+          // email: profile.user.email,
         };
       },
 
@@ -70,7 +85,7 @@ const config = {
     strategy: "jwt",
 
   },
-  basePath: "/auth",
+  basePath: "/api/auth",
 
 } satisfies NextAuthConfig;
 export const { handlers, signIn, signOut, auth } = NextAuth(config);

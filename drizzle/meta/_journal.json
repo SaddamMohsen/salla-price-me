@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1722446886250,
-      "tag": "0000_fixed_zarek",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1722447382441,
-      "tag": "0001_damp_purple_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1722449138964,
-      "tag": "0002_volatile_hedge_knight",
+      "when": 1723118122068,
+      "tag": "0000_dashing_yellowjacket",
       "breakpoints": true
     }
   ]
