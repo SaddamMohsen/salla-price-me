@@ -1,4 +1,5 @@
-import { signIn, signOut } from "@/auth";
+"use client";
+import { signIn, signOut } from "next-auth/react";
 import { Button } from "./ui/button";
 
 export function SignIn({
@@ -8,8 +9,7 @@ export function SignIn({
   return (
     <form
       action={async () => {
-        "use server";
-        await signIn(provider);
+        await signIn("salla");
       }}>
       <Button {...props}>Sign In</Button>
     </form>
@@ -20,7 +20,6 @@ export function SignOut(props: React.ComponentPropsWithRef<typeof Button>) {
   return (
     <form
       action={async () => {
-        "use server";
         await signOut();
       }}
       className="w-full">

@@ -1,10 +1,11 @@
 import Image from "next/image";
-import { auth, signIn, signOut } from "@/auth";
+// import { auth, signIn, signOut } from "@/auth";
+import { getAuthSession } from "@/auth";
 import { SignIn } from "@/components/auth-component";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 export default async function Home() {
-  const session = await auth();
+  const session = await getAuthSession();
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">

@@ -1,6 +1,6 @@
 {
-  "id": "4b612360-6095-410d-98ea-819f2375f888",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "c287442d-cb08-4f50-8971-eb807b2fadbb",
+  "prevId": "4b612360-6095-410d-98ea-819f2375f888",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -100,7 +100,15 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "account_providerAccountId_unique": {
+          "name": "account_providerAccountId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "providerAccountId"
+          ]
+        }
+      }
     },
     "public.merchants": {
       "name": "merchants",

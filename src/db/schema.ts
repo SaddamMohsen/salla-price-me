@@ -1,25 +1,89 @@
 
 
-import { serial, text, timestamp, pgTable, numeric, integer, date, boolean, PgNumeric, PgDoublePrecision, } from "drizzle-orm/pg-core";
+import { serial,jsonb, text, primaryKey ,timestamp, pgTable, numeric, integer, date, boolean, PgNumeric, PgDoublePrecision, uuid, } from "drizzle-orm/pg-core";
 
-export const accounts = pgTable('accounts', {
-    id: serial("id").primaryKey(),
-    access_token: text("access_token"),
-    expiredIn: integer('expired_in'),//timestamp('expired_in', { mode: "string" }),
-    refresh_token: text("refresh_token"),
-    user_id: integer("user_id").references(() => users.id),
+
+
+//import type { AdapterAccountType } from "next-auth/adapters"
+ 
+ 
+import type { AdapterAccount } from "@auth/core/adapters";
+import {  InferSelectModel, relations } from "drizzle-orm";
+
+export const user = pgTable("user", {
+	id: text("id").notNull().primaryKey(),
+	name: text("name"),
+	email: text("email").unique(),
+	emailVerified: timestamp("emailVerified", { mode: "date" }),
+	image: text("image"),
+	mobile: text("mobile").unique(),
+	role: text('role'),
+	created_at: timestamp("created_at", { mode: "string" }),// '2024-07-11 23:31:35',
+	//username: text("username").unique(),
+	merchant: jsonb("merchant"),
 });
-export const users = pgTable("users", {
 
-    id: integer("id").primaryKey().notNull().unique(),
-    name: text("name"),
-    email: text("email"),
-    mobile: text("mobile"),
-    role: text("role"),    //.$type<"admin" | "user">(),
-    createdAt: text("created_at"),
-    updatedAt: text("updated_at"),
+export type User = InferSelectModel<typeof user>;
 
+export const account = pgTable(
+	"account",
+	{
+		userId: text("userId")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+		type: text("type").$type<AdapterAccount["type"]>().notNull(),
+		provider: text("provider").notNull(),
+		providerAccountId: text("providerAccountId").notNull().unique(),
+		refresh_token: text("refresh_token"),
+		access_token: text("access_token"),
+		expires_at: integer("expires_at"),
+		token_type: text("token_type"),
+		scope: text("scope"),
+		id_token: text("id_token"),
+		session_state: text("session_state"),
+	},
+	(account) => ({
+		compoundKey: primaryKey({ columns: [account.provider, account.providerAccountId] }),
+	})
+);
+
+export const sessions = pgTable("session", {
+	sessionToken: text("sessionToken").notNull().primaryKey(),
+	userId: text("userId")
+		.notNull()
+		.references(() => user.id, { onDelete: "cascade" }),
+	expires: timestamp("expires", { mode: "date" }).notNull(),
 });
+
+export const verificationTokens = pgTable(
+	"verificationToken",
+	{
+		identifier: text("identifier").notNull(),
+		token: text("token").notNull(),
+		expires: timestamp("expires", { mode: "date" }).notNull(),
+	},
+	(table) => ({
+		compoundKey: primaryKey({ columns: [table.identifier, table.token] }),
+	})
+);
+// export const accounts = pgTable('accounts', {
+//     id: uuid("id").primaryKey(),
+//     access_token: text("access_token"),
+//     expiredIn: integer('expired_in'),//timestamp('expired_in', { mode: "string" }),
+//     refresh_token: text("refresh_token"),
+//     user_id: integer("user_id").references(() => users.id),
+// });
+// export const users = pgTable("users", {
+
+//     id: integer("id").primaryKey().notNull().unique(),
+//     name: text("name"),
+//     email: text("email"),
+//     mobile: text("mobile"),
+//     role: text("role"),    //.$type<"admin" | "user">(),
+//     createdAt: text("created_at"),
+//     updatedAt: text("updated_at"),
+
+// });
 
 export const merchants = pgTable("merchants", {
     id: integer("id").primaryKey(),//1500169364,
@@ -33,7 +97,7 @@ export const merchants = pgTable("merchants", {
     tax_number: integer('tax_number'),
     commercial_number: integer('commercial_number'),// null,
     created_at: text('created_at'), // '2024-07-11 23:31:34',
-    owner: integer('owner').references(() => users.id)
+    owner: text('owner').references(() => account.providerAccountId,{ onDelete: "cascade" ,onUpdate:"cascade"})
 });
 
 export const products=pgTable("products",{
