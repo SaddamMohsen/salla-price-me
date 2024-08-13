@@ -11,7 +11,7 @@ import type { AdapterAccount } from "@auth/core/adapters";
 import {  InferSelectModel, relations } from "drizzle-orm";
 
 export const user = pgTable("user", {
-	id: text("id").notNull().primaryKey(),
+	id: text("id").notNull().primaryKey().$defaultFn(()=>crypto.randomUUID()),
 	name: text("name"),
 	email: text("email").unique(),
 	emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -19,7 +19,7 @@ export const user = pgTable("user", {
 	mobile: text("mobile").unique(),
 	role: text('role'),
 	created_at: timestamp("created_at", { mode: "string" }),// '2024-07-11 23:31:35',
-	//username: text("username").unique(),
+	userid: integer("userid").unique(),
 	merchant: jsonb("merchant"),
 });
 
@@ -33,7 +33,7 @@ export const account = pgTable(
 			.references(() => user.id, { onDelete: "cascade" }),
 		type: text("type").$type<AdapterAccount["type"]>().notNull(),
 		provider: text("provider").notNull(),
-		providerAccountId: text("providerAccountId").notNull().unique(),
+		providerAccountId: text("providerAccountId").unique().notNull(),
 		refresh_token: text("refresh_token"),
 		access_token: text("access_token"),
 		expires_at: integer("expires_at"),

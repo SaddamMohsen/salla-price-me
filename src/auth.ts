@@ -7,9 +7,12 @@ import { user as users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import SallaProvider from "@/lib/salla";
+
 export const authOptions: NextAuthOptions = {
   // @ts-ignore
-  adapter: DrizzleAdapter(db),
+  adapter: DrizzleAdapter(db, {
+    usersTable: users
+  }),
   secret: process.env.AUTH_SECRET,
 
   providers: [
@@ -30,9 +33,9 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async session({ session, token, user }) {
-      console.log('in session', session);
-      console.log('in session token', token);
-      console.log('in session user', user);
+      // console.log('in session', session);
+      // console.log('in session token', token);
+      // console.log('in session user', user);
       // do something to session
       if (token) {
         session.user.id = token.id;

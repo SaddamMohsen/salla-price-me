@@ -1,7 +1,7 @@
 import Image from "next/image";
 // import { auth, signIn, signOut } from "@/auth";
 import { getAuthSession } from "@/auth";
-import { SignIn } from "@/components/auth-component";
+import { SignIn, SignOut } from "@/components/auth-component";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 export default async function Home() {
@@ -57,7 +57,7 @@ export default async function Home() {
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
             rel="noopener noreferrer">
             <h2 className="mb-3 text-2xl font-semibold">
-              <SignIn />
+              {session !== null ? <SignOut /> : <SignIn />}
             </h2>
           </div>
           <div

@@ -11,7 +11,9 @@ export function SignIn({
       action={async () => {
         await signIn("salla");
       }}>
-      <Button {...props}>Sign In</Button>
+      <Button {...props} className="">
+        Sign In
+      </Button>
     </form>
   );
 }

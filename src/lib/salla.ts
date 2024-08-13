@@ -1,6 +1,8 @@
 import { OAuthConfig } from 'next-auth/providers/oauth';
 
 import { OAuthProviderOptions } from './oauth-provider';
+import { Awaitable } from 'next-auth';
+import { User } from '@/db/schema';
 
 
 const callbackUrl = "http://localhost:3000/api/auth/callback/salla";
@@ -107,29 +109,19 @@ const SallaProvider = (options: OAuthProviderOptions): OAuthConfig<any> => ({
                 }
             }
         },
-        profile: async (profile, tokens) => {
-            console.log('profile in profile', profile);
-            //  console.log('token in profile', tokens);
-            // const res = await fetch(
-            //     "https://accounts.salla.sa/oauth2/user/info",
-            //     {
-            //         method: "GET",
-            //         headers: {
-            //             Authorization: `Bearer ${tokens.access_token}`,
-            //         },
-            //     }
-            // );
-            // const { data: user } = await res.json();
-            // console.log('User info', user);
-            const user = profile;
+        profile: (profile): Awaitable<User> => {
+            console.log('user in profile', profile);
+            // return profile
+            // const user = profile;
             return {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                created_at: user.created_at,
-                mobile: user.mobile,
-                merchant: user.merchant,
+                id: profile.id,
+                name: profile.name,
+                email: profile.email,
+                role: profile.role,
+                created_at: profile.created_at,
+                mobile: profile.mobile,
+                merchant: profile.merchant,
+                userid: profile.id,
             };
         },
 

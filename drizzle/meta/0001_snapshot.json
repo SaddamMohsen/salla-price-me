@@ -1,6 +1,6 @@
 {
-  "id": "c287442d-cb08-4f50-8971-eb807b2fadbb",
-  "prevId": "4b612360-6095-410d-98ea-819f2375f888",
+  "id": "7b795cc4-1647-4ee5-a852-75455451ec2d",
+  "prevId": "07d5b58e-42e2-4ed4-98ea-29e3b833afdd",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -199,8 +199,8 @@
           "columnsTo": [
             "providerAccountId"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -425,6 +425,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "userid": {
+          "name": "userid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "merchant": {
           "name": "merchant",
           "type": "jsonb",
@@ -448,6 +454,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "mobile"
+          ]
+        },
+        "user_userid_unique": {
+          "name": "user_userid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "userid"
           ]
         }
       }

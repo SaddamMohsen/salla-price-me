@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS "account" (
 	"scope" text,
 	"id_token" text,
 	"session_state" text,
-	CONSTRAINT "account_provider_providerAccountId_pk" PRIMARY KEY("provider","providerAccountId")
+	CONSTRAINT "account_provider_providerAccountId_pk" PRIMARY KEY("provider","providerAccountId"),
+	CONSTRAINT "account_providerAccountId_unique" UNIQUE("providerAccountId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "merchants" (
@@ -84,7 +85,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "merchants" ADD CONSTRAINT "merchants_owner_account_providerAccountId_fk" FOREIGN KEY ("owner") REFERENCES "public"."account"("providerAccountId") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "merchants" ADD CONSTRAINT "merchants_owner_account_providerAccountId_fk" FOREIGN KEY ("owner") REFERENCES "public"."account"("providerAccountId") ON DELETE cascade ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

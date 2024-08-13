@@ -84,7 +84,7 @@ export const createUser = async (data: any) => {
     }
 }
 
-export const createMerchant = async (data: z.infer<typeof Merchant>, owner: number) => {
+export const createMerchant = async (data: z.infer<typeof Merchant>, owner: any) => {
     console.log('inside create merchant');
     // const validateValues = Merchant.safeParse(data)
     // if (!validateValues.success) {
